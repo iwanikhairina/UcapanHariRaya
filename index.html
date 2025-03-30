@@ -59,6 +59,7 @@
             height: 100vh;
             object-fit: cover;
             z-index: 1;
+            display: none;
         }
         .overlay {
             position: fixed;
@@ -90,26 +91,12 @@
         </div>
     </div>
 
-    <audio id="audio" src="./audioraya.mp3"></audio>
-    <video id="video" class="fullscreen-video" playsinline muted>
+    <audio id="audio" src="./audioraya.mp3" preload="auto"></audio>
+    <video id="video" class="fullscreen-video" playsinline muted preload="auto">
         <source src="./videoidulfitri.mp4" type="video/mp4">
-        Your browser does not support the video tag.
     </video>
     
     <script>
-        // Preload video dan audio
-        window.onload = function() {
-            const video = document.getElementById('video');
-            const audio = document.getElementById('audio');
-            
-            // Pastikan file media di-preload
-            video.load();
-            audio.load();
-            
-            // Sembunyikan video sampai diputar
-            video.style.display = 'none';
-        };
-        
         function startCelebration() {
             document.getElementById('page1').classList.add('hidden');
             const video = document.getElementById('video');
@@ -118,23 +105,16 @@
             // Tampilkan video
             video.style.display = 'block';
             
-            // Tangani autoplay yang diblokir browser
-            const playPromise = video.play();
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    // Autoplay berhasil
-                    audio.play().catch(e => {
-                        console.log("Audio autoplay gagal:", e);
-                    });
-                }).catch(error => {
-                    // Autoplay gagal
-                    console.log("Video autoplay gagal:", error);
-                    // Tampilkan page2 karena video gagal diputar
-                    video.style.display = 'none';
-                    document.getElementById('page2').classList.remove('hidden');
-                });
-            }
-            
+            // Mulai video dan audio
+            video.play().then(() => {
+                audio.play().catch(e => console.log("Gagal memutar audio:", e));
+            }).catch(error => {
+                console.log("Autoplay gagal:", error);
+                video.style.display = 'none';
+                document.getElementById('page2').classList.remove('hidden');
+            });
+
+            // Saat video selesai, tampilkan page2
             video.onended = function() {
                 video.style.display = 'none';
                 document.getElementById('page2').classList.remove('hidden');
