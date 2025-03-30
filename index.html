@@ -11,7 +11,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: url('background.jpeg') no-repeat center center/cover;
+            background: url('./background.jpeg') no-repeat center center/cover;
             font-family: 'Nunito', sans-serif;
             text-align: center;
             margin: 0;
@@ -39,6 +39,7 @@
         }
         h1, h2 {
             color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
         }
         button {
             margin-top: 20px;
@@ -58,11 +59,21 @@
             height: 100vh;
             object-fit: cover;
             z-index: 1;
-            display: none;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 0;
         }
     </style>
 </head>
 <body>
+    <div class="overlay"></div>
+    
     <div class="container" id="page1">
         <h1>Setelah 30 hari ngejalani quest puasa, akhirnya kita sampai di final stage!<br>Maafin Aku yaa kalo ada salah...</h1>
         <button onclick="startCelebration()">Dimaafin</button>
@@ -79,21 +90,50 @@
         </div>
     </div>
 
-    <audio id="audio" src="audioraya.mp3"></audio>
-    <video id="video" class="fullscreen-video" playsinline autoplay>
-        <source src="videoidulfitri.mp4" type="video/mp4">
+    <audio id="audio" src="./audioraya.mp3"></audio>
+    <video id="video" class="fullscreen-video" playsinline muted>
+        <source src="./videoidulfitri.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     
     <script>
+        // Preload video dan audio
+        window.onload = function() {
+            const video = document.getElementById('video');
+            const audio = document.getElementById('audio');
+            
+            // Pastikan file media di-preload
+            video.load();
+            audio.load();
+            
+            // Sembunyikan video sampai diputar
+            video.style.display = 'none';
+        };
+        
         function startCelebration() {
             document.getElementById('page1').classList.add('hidden');
-            let video = document.getElementById('video');
-            let audio = document.getElementById('audio');
+            const video = document.getElementById('video');
+            const audio = document.getElementById('audio');
             
+            // Tampilkan video
             video.style.display = 'block';
-            audio.play();
-            video.play();
+            
+            // Tangani autoplay yang diblokir browser
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // Autoplay berhasil
+                    audio.play().catch(e => {
+                        console.log("Audio autoplay gagal:", e);
+                    });
+                }).catch(error => {
+                    // Autoplay gagal
+                    console.log("Video autoplay gagal:", error);
+                    // Tampilkan page2 karena video gagal diputar
+                    video.style.display = 'none';
+                    document.getElementById('page2').classList.remove('hidden');
+                });
+            }
             
             video.onended = function() {
                 video.style.display = 'none';
