@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Hari Raya Idul Fitri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('background.jpeg') no-repeat center center/cover;
+            font-family: 'Nunito', sans-serif;
+            text-align: center;
+            margin: 0;
+            flex-direction: column;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        .hidden {
+            display: none;
+        }
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        h1, h2 {
+            color: white;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .fullscreen-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="page1">
+        <h1>Setelah 30 hari ngejalani quest puasa, akhirnya kita sampai di final stage!<br>Maafin Aku yaa kalo ada salah...</h1>
+        <button onclick="startCelebration()">Dimaafin</button>
+    </div>
+    
+    <div class="container hidden" id="page2">
+        <h2>Selamat Hari Raya Idul Fitri 1446 H.</h2>
+        <div class="box">
+            <p><b>Setelah melewati bulan Ramadhan, kita sama-sama rayakan kemenangan.</b><br>
+            Mohon maaf lahir dan batin atas segala khilaf.</p>
+            <p><b>Semoga amalan kita diterima dan silaturahmi kita tetap terjaga.</b></p>
+            <p><b>Minal aidin wal faizin.</b></p>
+            <p><b>From Wani Gemazz</b></p>
+        </div>
+    </div>
+
+    <audio id="audio" src="audioraya.mp3"></audio>
+    <video id="video" class="hidden fullscreen-video" src="videoidulfitri.mp4"></video>
+    
+    <script>
+        function startCelebration() {
+            document.getElementById('page1').classList.add('hidden');
+            let video = document.getElementById('video');
+            let audio = document.getElementById('audio');
+            
+            video.classList.remove('hidden');
+            audio.play();
+            video.play();
+            
+            video.onended = function() {
+                video.classList.add('hidden');
+                document.getElementById('page2').classList.remove('hidden');
+            };
+        }
+    </script>
+</body>
+</html>
